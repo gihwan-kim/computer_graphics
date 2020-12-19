@@ -1,0 +1,198 @@
+- [참고 자료 : opengl 강좌](http://soen.kr/)
+
+glut 보다 glfw 가 더 최신 라이브러리여서 유튜브 강의에서는 glfw 를 사용한다고 한다.
+
+
+low level 의 opengl api 는 window 를 띄워주는 기능을 만들어줘야하는데
+glfw api 의 경우는 이런 기능들을 관리해주기 때문에 편리하다.
+
+
+
+[polygon]
+- 선분들의 반복으로 경계가 생성되고 경계를 통해 내부를 가진 객체를 polygon (다각형)이라고한다.
+- 디스플레이하기 쉽고 곡면을 근사(approximation) 하기도 편하다.
+
+
+[Vertex]
+    - 모든 디지털 그래픽의 기본은 pixel (점) 이다.
+    - 3차원 그래픽에서는 Vertex 를 기본 요소로한다.
+    - Vertex 는 색상, 크기에대한 정보는 없고 위치만을 정보로 가진다.
+
+    ```
+    void glBegin(GLenum mode);
+    { 
+        vertex 정의하는 블록
+    }
+    void glEnd(void);
+    ```
+
+    - 위 두개의 함수 블록 사이에서 vertex 를 정의한다.
+
+    1. vertex 정의 하는 법
+        ```
+        glVertex[2,3,4][s,i,f,d][v](x,y,z,w)
+        ```
+
+        glVertex 함수로 vertex 를 지정해준다.
+    
+! 블록내의 정점들로 무엇을 어떻게 그릴지는 glBegin() 함수에 전달되는 값에의해 결정된다.
+    모드
+
+설명
+
+    GL_POINTS           독립적인 점
+
+    GL_LINE_STRIP       연결된 선분
+
+    GL_LINE_LOOP        시작점과 끝점을 이은 선분
+
+    GL_LINES            두개의 정점들을 이은 선분
+
+    GL_TRIANGLES        세개씩 연결한 삼각형
+
+    GL_TRIANGLE_STRIP   연결된 삼각형
+
+    GL_TRIANGLE_FAN     중심을 공유하는 삼각형
+
+    GL_QUADS            정점 4개씩을 연결하여 사각형을 그린다.
+
+    GL_QUAD_STRIP       연결된 사각형
+
+    GL_POLYGON          연결된 볼록 다각형
+
+
+
+	glBegin(GL_TRIANGLE_FAN);
+	{
+		// center of polygonized circle
+		glVertex2f(0.0, 0.0);
+
+		const int num_triangles = 5;
+		const float dtheta = 2.0 * 3.141592 / (float)5;
+		const float radius = 0.5;
+
+		for (float theta = 0.0; theta < 2.0 * 3.141592; theta += dtheta)
+		{
+			const float x = radius * cos(theta);
+			const float y = radius * sin(theta);
+			glVertex2f(x, y);
+		}
+	}
+	glEnd();
+
+    원을 근사하기위해서 중심의 한점을 공유하는 삼각형을 많이 생성한다면 원을 근사할 수 있을 것이다.
+    glBegin 에 GL_TRIANGLE_FAN 값을 주고 theta 를 통해 x, y 좌표를 통해 삼각형을 생성해준다.
+    
+    -> 빌드시켜보면 구 모양을 근사하지 못한다.
+    [ 이유 ? ]
+        floating point error
+        기계의 정밀도때문에 360 도를 적절하게 계산하지 못한다고한다.
+
+    근데 또 삼각형 수를 엄청 늘려주니까 원모양이 나오긴하네
+
+
+[ aspect ratio : 종횡비]
+
+    - 가로의 길이를 세로의 길이로 나눈 값
+
+
+[ 종횡비 1 ?]
+    - 기본적으로 -1 ~ 1 의 범위에서 작업할때 설정한 해상도의 종횡비가 1이 되지않을때 유용하다.
+    - viewport 가 정사각형(종횡비 1)이 아닌 상태에서 그대로 그릴 경우 찌그러지게 된다.
+
+
+[ 디폴트로 주어진 좌표공간 ]
+    - (-1, 1) 범위의 공간
+
+
+[ 직교투영(ortho) 에서 종횡비 맞추기 ]
+    ```
+    void glOrtho(GLdouble left, 
+                GLdouble right, 
+                GLdouble bottom, 
+                GLdouble top, 
+                GLdouble nearVal, 
+                GLdouble farVal);
+    ```
+    - glOrtho : 투영 방법을 직교투영으로 설정하는 함수
+    - 투영방식의 기본값은 직교투영이다.
+    - 거리에 상관없이 물체의 크기를 계산한다.
+    - 멀리있는 물체라도 크기가 같다면 투영된 결과도 동일한 크기를 가진다.
+
+Ex.
+
+    width : 640
+    height : 480
+
+    가로가 세로보다 더 크다. 따라서 가로의 길이를 세로의 길이와 같게 종횡비로 나눠주면 된다.
+
+    glOrtho(-1, 1, -1 / aspectRatio, 1 / aspectRatio, -1.0, 1.0)
+
+
+[ call back 함수]
+
+    - 키보드 마우스 등 종류가 많다.
+    glfwSetKeyCallback(window, call_back_fun_ptr);
+
+    콜백 함수를 선언, 정의해주고 glfwSetKeyCallback() 함수를 호출하여 등록해준다.
+    - 콜백함수 안에서 어떤 키가 눌려 졌는지 확인할 수 있다.
+
+    ex.
+    ```
+    void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+    {
+        if (key == GLFW_KEY_E && action == GLFW_PRESS)
+            // activate_airship();
+            std::cout << "KEY PRESSED" << std::endl;
+    }
+    ```
+
+[ 방향키를 눌러서 화면에 출력한 객체를 이동시키기 ]
+    
+    1. 방향키를 누르면 원의 중심 값이 수정되도록 콜백함수를 설정해준다.
+        ```
+        float circle_center_x = 0.0;
+        float circle_center_y = 0.0;
+
+        /*
+            key_callbakc()
+                parameter 인 window 에 대하여 콜백 함수가 설정되는것 같다.
+
+        */
+        void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+        {
+            if (key == GLFW_KEY_LEFT && action == GLFW_PRESS)
+            {
+                circle_center_x += 0.1;
+                std::cout << "LEFT KEY PRESSED" << std::endl;
+            }
+            if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS)
+            {
+                circle_center_x -= 0.1;
+                std::cout << "RIGHT KEY PRESSED" << std::endl;
+            }
+        }
+        ```
+    2. 원을 그리는 반복문안에서 원의 중심을 설정해주는 glVertex2f() 함수에서 상수대신
+         해당 중심의 좌표 변수를 넣어준다.
+        ```        
+		glBegin(GL_TRIANGLE_FAN);
+		{
+			// center of polygonized circle
+			glVertex2f(circle_center_x, circle_center_y);
+
+			const int num_triangles = 10000;
+			const float dtheta = 2.0 * 3.141592 / (float)num_triangles;
+			const float radius = 0.5;
+
+			float theta = 0.0;
+			for (float theta = 0.0; theta < 2.0 * 3.141592; theta += dtheta)
+			{
+				const float x = radius * cos(theta);
+				const float y = radius * sin(theta); 
+				glVertex2f(x, y);
+			}
+		}
+		glEnd();
+        ```
+    3. 중심 좌표만 이동하는게 아니라 원의 경계 점도 

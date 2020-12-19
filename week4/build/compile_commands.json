@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/Users/gihkim/cs/computer_graphics/week4/build",
+  "command": "/usr/bin/clang++  -I/usr/local/Cellar/glfw/3.3.2/include -I/usr/local/Cellar/glew/2.2.0/include -I/usr/local/Cellar/glm/0.9.9.8/include -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.0.sdk -mmacosx-version-min=10.15 -std=gnu++17 -o CMakeFiles/week4.dir/src/main.cpp.o -c /Users/gihkim/cs/computer_graphics/week4/src/main.cpp",
+  "file": "/Users/gihkim/cs/computer_graphics/week4/src/main.cpp"
+}
+]

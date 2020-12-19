@@ -1,0 +1,36 @@
+1. CMake 설치
+brew install cmake
+
+2. vscode extension 설치
+c/c++, cmake, cmake tools
+
+3. CMake : configure
+CMakeLists.txt 파일을 생성해주기
+
+4. CMake : build
+
+    mac : F7 or [commad option p (pallate) -> CMAKE : BUILD]
+
+5. 라이브러리 설치
+
+    [ glfw 설치 ]
+        brew install glfw
+
+        경로 확인
+
+        /usr/local/Cellar/glfw/<version>/include    => 헤더
+        /usr/local/Cellar/glfw/<version>/lib        => 라이브러리 경로
+        libglfw.dylib
+
+        또는
+        /usr/local/include/GLFW   => 헤더
+        /usr/local/lib          => 라이브러리 경로
+        libglfw.dylib           => 라이브러리 명
+
+    [ glew ]
+        brew install glew
+
+        glfw 와 동일
+
+
+        include, library 경로 설정 및 라이브러리 이름 설정해주고 링킹해주기

@@ -1,0 +1,3 @@
+/Users/gihkim/cs/computer_graphics/week3/build/CMakeFiles/rebuild_cache.dir
+/Users/gihkim/cs/computer_graphics/week3/build/CMakeFiles/edit_cache.dir
+/Users/gihkim/cs/computer_graphics/week3/build/CMakeFiles/week3.dir
