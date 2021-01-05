@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 #include <Opengl/glu.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 #include <cstring>
 #include <stdlib.h>		  // srand, rand
 #include <thread>         // std::this_thread::sleep_for
@@ -155,8 +156,7 @@ int main(void)
 	//glOrtho(-0.2, 1.2, -0.2, 1.2, -10.0, 10.0);
 	glOrtho(-1.2, 1.2, -1.2, 1.2, -10.0, 10.0);
 	//TODO: consider anisotropic view
-	GLKMatrix4MakeLookAt()
-	// gluLookAt(1.2, 0.8, 1.2, 0.5, 0.5, 0.5, 0, 1, 0);
+	gluLookAt(1.2, 0.8, 1.2, 0.5, 0.5, 0.5, 0, 1, 0);
 	//glLoadIdentity();
 	//gluLookAt(1, 1, 1, 0.5, 0.5, 0.5, 0, 1, 0);
 	//gluLookAt(0, 0, 0, 0.25, 0.25, 0.25, 0, 1, 0);
